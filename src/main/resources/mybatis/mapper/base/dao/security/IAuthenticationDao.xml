@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.security.dao.AuthenticationDao">
+    
+    <select id="AuthenticationStatusCheck" resultType="com.example.demo.security.vo.AuthenticationCodeVo" parameterType="java.util.HashMap">
+		select * from emailcode where email_code = #{emailCode}
+    </select>
+    
+
+    
+    
+	<insert id="AuthenticationInfoPost" parameterType="java.util.HashMap">
+        insert into emailcode (code_type, email_code, authentication_status, user_email)
+             values (#{codeType}, #{emailCode}, #{authenticationStatus}, #{userEmail});
+    </insert>
+
+     <update id="AuthenticationInfoPut" parameterType="java.util.HashMap">
+        update emailcode 
+        set authentication_status = #{authenticationStatus} 
+        where email_code = #{emailCode}
+    </update>
+    
+    <delete id="AuthenticationInfoDelete" parameterType="java.util.HashMap">
+        delete from emailcode    
+        where email_code = #{emailCode} and authentication_status = #{authenticationStatus}
+   	</delete>
+    
+   
+</mapper>

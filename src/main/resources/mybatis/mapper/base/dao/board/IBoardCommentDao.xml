@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.board.dao.BoardCommentDao">
+	<!-- 조회 설정 -->
+	<select id="BoardCommentAllListDao"
+		resultType="com.example.demo.board.vo.BoardCommentVo"
+		parameterType="java.util.HashMap">
+		select * from boardcomment order by comment_create_at
+		DESC;
+	</select>
+
+	<select id="BoardCommentBoardIdListDao"
+		resultType="com.example.demo.board.vo.BoardCommentVo"
+		parameterType="java.util.HashMap">
+		select * from boardcomment where board_id = #{boardId}
+		order by
+		comment_create_at ASC;
+	</select>
+
+	<!-- 모바일용 조회 레이어1 댓글 정보와 그 댓글의 레이어2 댓글(대댓글) 수를 포함하여 리턴 -->
+	<select id="BoardCommentLayer1ListDao"
+		resultType="com.example.demo.board.vo.BoardCommentLayer1InfoVo"
+		parameterType="java.util.HashMap">
+		WITH comment_list1 AS(
+		SELECT board_id, board_type,
+		comment_id,
+		comment_content, comment_layer, comment_create_at, user_id,
+		user_nickname
+		FROM boardcomment
+		WHERE board_id = #{boardId} AND
+		comment_layer = '1'),
+		comment_list2 AS(
+		SELECT board_id,
+		comment_parents_id, comment_layer, COUNT(comment_id)
+		AS
+		child_comment_count
+		FROM boardcomment
+		GROUP BY comment_parents_id
+		HAVING
+		comment_layer= '2' AND board_id = #{boardId})
+		SELECT c1.*,
+		c2.child_comment_count
+		FROM comment_list1 c1
+		LEFT JOIN comment_list2 c2
+		ON (c1.board_id =
+		c2.board_id AND c1.comment_id =
+		c2.comment_parents_id)
+		ORDER BY
+		c1.comment_create_at DESC
+	</select>
+
+	<select id="BoardCommentLayer2ListDao"
+		resultType="com.example.demo.board.vo.BoardCommentVo"
+		parameterType="java.util.HashMap">
+		select * from boardcomment where comment_parents_id =
+		#{commentParentsId}
+		and comment_layer = 2 ORDER BY comment_create_at
+		DESC;
+	</select>
+
+	<!-- 댓글 ID 검색 -->
+	<select id="BoardCommentIdSearchDao"
+		resultType="com.example.demo.board.vo.BoardCommentVo"
+		parameterType="java.util.HashMap">
+		select * from boardcomment where comment_id = #{commentId};
+	</select>
+
+	<!-- 작성,수정,삭제 -->
+	<insert id="BoardCommentPostDao"
+		parameterType="java.util.HashMap">
+		insert into boardcomment (board_id, board_type, user_id,
+		username,
+		user_nickname,
+		comment_id, comment_parents_id,
+		comment_content, comment_layer,
+		comment_create_at, comment_update_at)
+		values (#{boardId}, #{boardType}, #{userId}, #{username},
+		#{userNickname},
+		#{commentId}, #{commentParentsId}, #{commentContent},
+		#{commentLayer}, #{commentCreateAt}, #{commentUpdateAt});
+	</insert>
+
+	<update id="BoardCommentPutDao"
+		parameterType="java.util.HashMap">
+		update boardcomment
+		set comment_content = #{commentContent}, comment_update_at = #{commentUpdateAt}
+		where comment_id = #{commentId};
+	</update>
+
+	<delete id="BoardCommentDeleteDao"
+		parameterType="java.util.HashMap">
+		delete from boardcomment
+		where comment_id = #{commentId}
+	</delete>
+
+	<!-- 상위 레이어 아이디가 삭제되면 하위 레이어 삭제 하기위해 -->
+	<delete id="BoardCommentDeletelayer2Dao"
+		parameterType="java.util.HashMap">
+		delete from boardcomment
+		where comment_parents_id = #{commentId}
+	</delete>
+</mapper>
+
+
+<!-- public int BoardCommentPostDao(Map<String, String> map); public int 
+	BoardCommentPutDao(Map<String, String> map); public int BoardCommentDeleteDao(Map<String, 
+	String> map); //boardid 마다 댓글 갯수 // => boardid를 통한 전체 검색과 비슷 해서 동작 고민중 public 
+	int BoardCommentCountDao(Map<String, String> map); //boardid의 댓글, 대댓글 몰 리스트 
+	public List<BoardTextInfoVo> BoardCommentAllListDao(Map<String, String> map); 
+	//boardid 댓글 리스트 public List<BoardTextInfoVo> BoardCommentLayer1ListDao(Map<String, 
+	String> map); //boardid 대댓글 리스트 public List<BoardTextInfoVo> BoardCommentLayer2ListDao(Map<String, 
+	String> map); -->

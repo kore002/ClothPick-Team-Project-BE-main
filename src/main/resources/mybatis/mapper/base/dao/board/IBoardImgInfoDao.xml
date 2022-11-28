@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.board.dao.BoardImgInfoDao">
+
+
+ <insert id="BoardImgInfoUploadDao" parameterType="java.util.HashMap">
+        insert into boardimginfo (file_unique_name, file_real_name, file_size, file_extension, file_upload_folder, file_upload_time)
+             values (#{fileUniqueName}, #{fileRealName}, #{fileSize}, #{fileExtension}, #{fileUploadFolder}, #{fileUploadTime});
+</insert>
+    	
+    	
+<select id="searchimgDao" resultType="com.example.demo.board.vo.BoardImgInfoVo" parameterType="java.util.HashMap">
+        select file_real_name, file_extension, file_upload_folder from boardimginfo where file_unique_name = #{fileUniqueName};
+</select>
+</mapper>

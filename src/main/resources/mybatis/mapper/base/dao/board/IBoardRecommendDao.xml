@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.board.dao.BoardRecommendDao">
+
+
+ <insert id="BoardRecommendPostDao" parameterType="java.util.HashMap">
+        insert into boardrecommend (user_id, username, board_id, board_type)
+             values (#{userId}, #{username}, #{boardId}, #{boardType});
+</insert>
+
+
+<delete id="BoardRecommendDeleteDao" parameterType="java.util.HashMap">
+        delete from boardrecommend    
+        where board_id = #{boardId} and user_id = #{userId};
+</delete>
+    	
+<select id="BoardRecommendSerchDao" resultType="integer" parameterType="java.util.HashMap">
+        select count(user_id) from boardrecommend where user_id = #{userId} and board_id = #{boardId};
+</select>
+
+<select id="BoardRecommendCountSerchDao" resultType="integer" parameterType="java.util.HashMap">
+        select count(board_id) from boardrecommend where board_id = #{boardId};
+</select>
+</mapper>
+
+
+
+
+<!--	public int BoardRecommendPostDao(Map<String, String> map);
+	// 좋아요 삭제 추천 뿐이라 수정 하는 작업 없음
+	public int BoardRecommendPutDao(Map<String, String> map);
+	
+	public int BoardRecommendDeleteDao(Map<String, String> map);
+	
+	
+	// 글아디디랑 우저 앙디 동시 검색 할듯
+	public List<BoardRecommendVo> BoardRecommendSerchDao(Map<String, String> map);-->

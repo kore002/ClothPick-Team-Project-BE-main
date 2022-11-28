@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.security.dao.UserDao">
+    
+    <!-- 유저 인증을 위한 유저 정보 서치 쿼리 -->
+    <select id="UserSearchDao" resultType="com.example.demo.security.vo.UserVo" parameterType="java.util.HashMap">
+        select * from user where username = #{username} ;
+    </select>
+    
+    <insert id="UserSignUpDao" parameterType="java.util.HashMap">
+        insert into user (username, password, user_role, user_email, user_nickname, user_gender, user_dob, user_create_at, user_update_at)
+             values (#{username}, #{password}, #{userRole}, #{userEmail}, #{userNickName}, #{userGender}, #{userDOB}, #{createAT}, #{updateAT})
+    </insert>
+    
+    <!-- 중복 체크를 위한 쿼리 -->
+    <select id="UsernameSearchDao" resultType="integer" parameterType="java.util.HashMap">
+        select count(username) from user where username = #{username} ;
+    </select>
+    
+    <select id="UserEmailSearchDao" resultType="integer" parameterType="java.util.HashMap">
+        select count(user_email) from user where user_email = #{userEmail} ;
+    </select>
+    
+    <select id="UserNicknameSearchDao" resultType="integer" parameterType="java.util.HashMap">
+        select count(user_nickname) from user where user_nickname = #{userNickName} ;
+    </select>
+    
+   
+   <!-- 아이디 찾기, 비밀번호 초기화를 위한 쿼리 -->
+   	 <select id="SearchusernameDao" resultType="com.example.demo.security.vo.UserVo" parameterType="java.util.HashMap">
+        select username from user where user_email = #{userEmail};
+    </select>
+    
+   	<update id="ResetpasswordDao"  parameterType="java.util.HashMap">
+        update user
+        set password = #{password}  
+        where username = #{username} and user_email = #{userEmail};
+    </update>
+</mapper>

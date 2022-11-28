@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.board.dao.ConnectBoardImgDao">
+
+
+ <insert id="ConnectBoardImgPostDao" parameterType="java.util.HashMap">
+        insert into connectboardimg (board_id, board_type, file_unique_name, create_at, update_at)
+             values (#{boardId}, #{boardType}, #{fileUniqueName}, #{createAt}, #{updateAt});
+</insert>
+
+
+<delete id="ConnectBoardImgDeleteDao" parameterType="java.util.HashMap">
+        delete from connectboardimg    
+        where board_id = #{boardId};
+</delete>
+    	
+<select id="ConnectBoardImgTypeListDao" resultType="com.example.demo.board.vo.ConnectBoardImgVo" parameterType="java.util.HashMap">
+        select board_id, board_type, file_unique_name from connectboardimg where board_type = #{boardType}  order by create_at DESC;
+</select>
+
+<select id="ConnectBoardImgBoardIdListDao" resultType="com.example.demo.board.vo.ConnectBoardImgVo" parameterType="java.util.HashMap">
+        select board_id, board_type, file_unique_name from connectboardimg where board_id = #{boardId}  order by create_at DESC;
+</select>
+</mapper>
+
+
+
+
+<!-- public int ConnectBoardImgPostDao(Map<String, String> map);
+	
+	// 수정시 요처아는 사진의 개수가 달라 질수 있기 때문에 수정 요청이 의미가 없음
+	public int ConnectBoardImgPutDao(Map<String, String> map);
+	
+	public int ConnectBoardImgDeleteDao(Map<String, String> map);
+	
+	public List<ConnectBoardImgVo> ConnectBoardImgTypeListDao(Map<String, String> map);
+	public List<ConnectBoardImgVo> ConnectBoardImgBoardIdListDao(Map<String, String> map); -->

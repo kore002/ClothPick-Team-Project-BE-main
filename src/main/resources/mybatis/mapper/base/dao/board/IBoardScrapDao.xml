@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.board.dao.BoardScrapDao">
+
+
+ <insert id="BoardScrapPostDao" parameterType="java.util.HashMap">
+        insert into boardscrap (user_id, username, board_id, board_type)
+             values (#{userId}, #{username}, #{boardId}, #{boardType});
+</insert>
+
+
+<delete id="BoardScrapDeleteDao" parameterType="java.util.HashMap">
+        delete from boardscrap    
+        where user_id = #{userId} and board_id = #{boardId};
+</delete>
+    	
+<select id="BoardScrapUserIdListDao" resultType="com.example.demo.board.vo.BoardScrapVo" parameterType="java.util.HashMap">
+        select * from boardscrap where user_id = #{userId}; 
+</select>
+
+<select id="BoardScrapBoardTypeListDao" resultType="com.example.demo.board.vo.BoardScrapVo" parameterType="java.util.HashMap">
+        select * from boardscrap where user_id = #{userId} and board_type = #{boardType}; 
+</select>
+
+<select id="BoardScrapBoardInfoListDao" resultType="com.example.demo.board.vo.BoardScrapBoardInfoVo" parameterType="java.util.HashMap">
+    WITH textinfo AS (
+	SELECT board_id, board_type, board_title, board_content, board_create_at, board_recommend_count, user_id, user_nickname FROM boardtextinfo)
+	, scrapinfo AS (
+	SELECT board_id, board_type, user_id AS scrap_user_id, username AS scrap_username FROM boardscrap)
+	SELECT t.*, s.scrap_user_id, s.scrap_username FROM textinfo t LEFT JOIN scrapinfo s
+	ON (t.board_id = s.board_id AND t.board_type = s.board_type)
+	WHERE s.scrap_user_id = #{userId}
+</select>
+
+</mapper>
+
+
+
+
+<!-- public int BoardScrapPostDao(Map<String, String> map);
+	public int BoardScrapDeleteDao(Map<String, String> map);
+	
+	
+	// 유저 아이디로 글 아이디 가져옴
+	public List<BoardScrapVo> BoardScrapUserIdListDao(Map<String, String> map); -->

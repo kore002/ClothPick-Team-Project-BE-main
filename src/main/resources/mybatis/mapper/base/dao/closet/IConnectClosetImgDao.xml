@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.closet.dao.IConnectClosetImgDao">
+	<!-- 조회 -->
+	<select id="ConnectClosetImgGetDao" resultType="com.example.demo.closet.vo.ConnectClosetImgVo">
+		select * from connectclosetimg;
+	</select>
+	
+	<!-- 작성 -->
+	<insert id="ConnectClosetImgPostDao" parameterType="java.util.HashMap">
+		insert into connectclosetimg(cloth_img_name, cloth_id, create_at, update_at, user_id)
+		values (#{clothImgName}, #{clothId}, #{createAt}, #{updateAt}, #{userId})
+	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="ConnectClosetImgDeleteDao" parameterType="java.util.HashMap">
+		delete from connectclosetimg
+		where cloth_id = #{clothId};
+	</delete>
+</mapper>

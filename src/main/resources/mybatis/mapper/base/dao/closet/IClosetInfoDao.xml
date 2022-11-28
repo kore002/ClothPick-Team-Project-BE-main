@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.example.demo.closet.dao.IClosetInfoDao">
+	<!-- 조회 -->
+	<select id="ClosetInfoAllListDao" resultType="com.example.demo.closet.vo.ClosetGetInfoVo">
+		select * from closetinfo;
+	</select>
+	
+	<!-- 작성, 수정, 삭제 -->
+	<insert id="ClosetInfoWrite" parameterType="java.util.HashMap">
+		insert into closetinfo (cloth_id, cloth_type, cloth_detail, cloth_color, cloth_pattern, cloth_texture, cloth_style, cloth_keyword, cloth_pref, username, user_nickname, user_id)
+		values (#{clothId}, #{clothType}, #{clothDetail}, #{clothColor}, #{clothPattern}, #{clothTexture}, #{clothStyle}, #{clothKeyword}, #{clothPref}, #{username}, #{userNickname}, #{userId})
+	</insert>
+	
+	<update id="ClosetInfoEditDao" parameterType="java.util.HashMap">
+		update closetinfo
+		set cloth_keyword = #{clothKeyword}
+		where cloth_id = #{clothId};
+	</update>
+	
+	<delete id="ClosetInfoDeleteDao" parameterType="java.util.HashMap">
+      DELETE connect, cloth
+        FROM connectclosetimg AS connect
+        INNER JOIN closetinfo AS cloth ON connect.cloth_id = cloth.cloth_id
+        WHERE connect.cloth_id = #{clothId}
+   </delete>
+</mapper>
